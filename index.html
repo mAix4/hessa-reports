@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#155e59">
+<title>منشئ التقارير | المتوسطة السادسة للبنات ببريدة</title>
+<style>
+:root{--green:#155e59;--green2:#1d766e;--mint:#e8f3f0;--ink:#183331;--muted:#667b78;--line:#dce8e5;--bg:#f4f8f7;--white:#fff;--danger:#b42318;--gold:#b58a42}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif;line-height:1.7}
+header{background:linear-gradient(130deg,#104b48,#20776e);color:white;padding:26px 18px 22px;text-align:center}
+header .ministry{font-size:14px;opacity:.9}header h1{font-size:clamp(23px,4vw,34px);margin:8px 0 2px}header .school{font-size:17px;font-weight:bold}header .owner{display:inline-block;margin-top:12px;padding:6px 18px;border:1px solid #ffffff66;border-radius:30px;background:#ffffff12}
+.wrap{max-width:1100px;margin:22px auto;padding:0 14px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+button,.btn{border:0;border-radius:10px;padding:10px 16px;font:inherit;cursor:pointer;background:var(--green);color:white}
+button.secondary,.btn.secondary{background:#e7efed;color:var(--green);border:1px solid var(--line)}
+button.danger{background:#fff0ef;color:var(--danger);border:1px solid #f3cfcb}
+button.gold{background:#f5efe2;color:#785a20;border:1px solid #eadcbd}
+button:focus,input:focus,textarea:focus,select:focus{outline:3px solid #9bc9c1;outline-offset:1px}
+.tab.active{background:var(--green);color:#fff}.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 5px 20px #174c4510}
+h2{font-size:21px;margin:0 0 14px;color:var(--green)}h3{font-size:17px;margin:18px 0 8px;color:var(--green)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{display:flex;flex-direction:column;gap:5px}.field.full{grid-column:1/-1}label{font-weight:bold;font-size:14px}
+input,textarea,select{width:100%;border:1px solid #cbdad6;border-radius:9px;padding:11px 12px;font:inherit;background:#fff;color:var(--ink)}textarea{min-height:90px;resize:vertical}
+.hint{font-size:12px;color:var(--muted)}.section{border-top:1px solid var(--line);margin-top:20px;padding-top:14px}
+.listrow{display:flex;gap:8px;margin:8px 0}.listrow input{flex:1}.listrow button{flex-shrink:0;padding:8px 12px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:10px;margin-top:10px}
+.photo{position:relative;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#f8fbfa}.photo img{width:100%;height:110px;object-fit:cover;display:block}.photo button{position:absolute;top:5px;left:5px;padding:3px 8px;background:#9f2929}
+.report-list{display:grid;gap:10px}.report-item{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:13px;background:#fff}.report-item strong{display:block}.report-item small{color:var(--muted)}.report-item .actions{margin:0}
+.empty{text-align:center;color:var(--muted);padding:30px 10px;border:1px dashed #b9ccc7;border-radius:12px}
+.notice{background:#eff7f5;border:1px solid #d2e7e2;border-radius:11px;padding:12px 14px;color:#315c56;font-size:13px;margin:12px 0}
+.hidden{display:none!important}.report-preview{background:white;padding:28px;border:1px solid var(--line);border-radius:12px}.report-preview h1{text-align:center;color:var(--green);font-size:25px}.report-preview .center{text-align:center}.report-preview h3{border-bottom:1px solid var(--line);padding-bottom:5px}.report-preview li{margin:5px 0}.report-preview img{max-width:100%;max-height:240px;object-fit:contain;margin:6px;border:1px solid var(--line);border-radius:7px}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:14px}.report-item{align-items:flex-start;flex-direction:column}.report-item .actions{width:100%}.report-item button{flex:1}}
+@media print{body{background:white}.no-print,header,.tabs,footer{display:none!important}.wrap{max-width:none;margin:0;padding:0}.panel{border:0;box-shadow:none;padding:0}.report-preview{border:0;padding:0}.report-preview h1{margin-top:0} }
+</style>
+</head>
+<body>
+<header>
+ <div class="ministry">المملكة العربية السعودية · وزارة التعليم</div>
+ <div>إدارة التعليم بمنطقة القصيم</div>
+ <h1>منشئ التقارير</h1>
+ <div class="school">المتوسطة السادسة للبنات ببريدة</div>
+ <div class="owner">المديرة: تهاني أبوقريحة</div><br>
+ <div class="owner">إعداد وتنفيذ: حصة صالح المرشود</div>
+</header>
+<main class="wrap">
+ <div class="tabs no-print">
+  <button class="tab active" id="tabNew" onclick="showTab('new')">＋ تقرير جديد</button>
+  <button class="tab secondary" id="tabSaved" onclick="showTab('saved')">التقارير المحفوظة</button>
+  <button class="tab secondary" id="tabBackup" onclick="showTab('backup')">النسخ الاحتياطي</button>
+ </div>
+ <section id="newPanel" class="panel">
+  <h2 id="formHeading">إنشاء تقرير جديد</h2>
+  <div class="notice">املئي بيانات التقرير ثم اضغطي «حفظ التقرير». لا توجد بيانات جاهزة أو أمثلة مسبقة في النظام.</div>
+  <form id="reportForm">
+   <input type="hidden" id="reportId">
+   <div class="grid">
+    <div class="field full"><label for="title">عنوان التقرير *</label><input id="title" required placeholder="اكتبي عنوان التقرير"></div>
+    <div class="field"><label for="date">تاريخ التنفيذ</label><input id="date" type="date"></div>
+    <div class="field"><label for="place">مكان التنفيذ</label><input id="place" placeholder="مكان تنفيذ البرنامج أو النشاط"></div>
+    <div class="field"><label for="target">الفئة المستهدفة</label><input id="target" placeholder="مثلاً: الطالبات / المعلمات"></div>
+    <div class="field"><label for="count">عدد المستفيدات</label><input id="count" type="number" min="0" inputmode="numeric" placeholder="العدد"></div>
+    <div class="field full"><label for="summary">وصف التقرير / نبذة عن التنفيذ</label><textarea id="summary" placeholder="اكتبي نبذة عن البرنامج أو النشاط وما تم تنفيذه"></textarea></div>
+   </div>
+   <div class="section">
+    <h3>أهداف التقرير</h3><div id="goals"></div><button type="button" class="secondary" onclick="addLine('goals','الهدف')">＋ إضافة هدف</button>
+   </div>
+   <div class="section">
+    <h3>النتائج والمخرجات</h3><div id="results"></div><button type="button" class="secondary" onclick="addLine('results','النتيجة')">＋ إضافة نتيجة</button>
+   </div>
+   <div class="section">
+    <h3>التوصيات</h3><div id="recommendations"></div><button type="button" class="secondary" onclick="addLine('recommendations','التوصية')">＋ إضافة توصية</button>
+   </div>
+   <div class="section">
+    <h3>الشواهد والصور</h3>
+    <div class="field"><label for="evidence">إرفاق صور الشواهد</label><input id="evidence" type="file" accept="image/*" multiple><span class="hint">تُحفظ الصور مع التقرير داخل المتصفح وعلى الجهاز. احرصي على تنزيل نسخة احتياطية إذا كانت الصور كثيرة.</span></div>
+    <div id="photoGrid" class="photo-grid"></div>
+   </div>
+   <div class="actions no-print">
+    <button type="submit">حفظ التقرير</button>
+    <button type="button" class="secondary" onclick="clearForm()">تفريغ الحقول</button>
+    <button type="button" class="gold" onclick="previewCurrent()">معاينة وطباعة</button>
+   </div>
+  </form>
+ </section>
+ <section id="savedPanel" class="panel hidden">
+  <h2>التقارير المحفوظة على هذا الجهاز</h2>
+  <div class="notice">التقارير محفوظة محلياً في هذا المتصفح فقط. لا تُرفع إلى الإنترنت ولا تتم مزامنتها تلقائياً بين الأجهزة.</div>
+  <div id="reportList" class="report-list"></div>
+ </section>
+ <section id="backupPanel" class="panel hidden">
+  <h2>النسخ الاحتياطي ونقل التقارير</h2>
+  <p>نزّلي نسخة احتياطية للاحتفاظ بالتقارير والصور في ملفات جهازك، ويمكن استعادتها لاحقاً على الجهاز نفسه أو جهاز آخر.</p>
+  <div class="actions">
+   <button onclick="backupAll()">تنزيل نسخة احتياطية كاملة</button>
+   <label class="btn secondary" for="restoreFile">استعادة نسخة احتياطية</label>
+   <input id="restoreFile" class="hidden" type="file" accept=".json,application/json">
+  </div>
+  <div class="notice">نصيحة: احتفظي بملف النسخة الاحتياطية في تطبيق «الملفات» على الجوال أو في مجلد آمن على الكمبيوتر.</div>
+ </section>
+ <section id="previewPanel" class="panel hidden">
+  <div class="actions no-print"><button class="secondary" onclick="showTab('saved')">رجوع</button><button onclick="window.print()">طباعة / حفظ PDF</button></div>
+  <div id="previewContent" class="report-preview"></div>
+ </section>
+</main>
+<footer>منشئ التقارير · المتوسطة السادسة للبنات ببريدة</footer>
+<script>
+const KEY='sixthGirlsReports_v1';
+let reports=loadReports(), currentPhotos=[];
+function loadReports(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(reports));return true}catch(e){alert('تعذر الحفظ في مساحة المتصفح. نزّلي نسخة احتياطية أو قللي حجم الصور.');return false}}
+function showTab(tab){
+ ['new','saved','backup'].forEach(t=>{document.getElementById(t+'Panel').classList.toggle('hidden',t!==tab);document.getElementById(t==='new'?'tabNew':t==='saved'?'tabSaved':'tabBackup').classList.toggle('active',t===tab);document.getElementById(t==='new'?'tabNew':t==='saved'?'tabSaved':'tabBackup').classList.toggle('secondary',t!==tab)});
+ document.getElementById('previewPanel').classList.add('hidden');
+ if(tab==='saved')renderList();
+}
+function addLine(id,placeholder,value=''){const wrap=document.createElement('div');wrap.className='listrow';const input=document.createElement('input');input.placeholder=placeholder;input.value=value;input.setAttribute('aria-label',placeholder);const del=document.createElement('button');del.type='button';del.className='danger';del.textContent='حذف';del.onclick=()=>wrap.remove();wrap.append(input,del);document.getElementById(id).append(wrap)}
+function lines(id){return [...document.querySelectorAll('#'+id+' .listrow input')].map(x=>x.value.trim()).filter(Boolean)}
+function setLines(id,items){document.getElementById(id).innerHTML='';(items||[]).forEach(x=>addLine(id,'اكتبي هنا',x))}
+function clearForm(){document.getElementById('reportForm').reset();document.getElementById('reportId').value='';['goals','results','recommendations'].forEach(x=>document.getElementById(x).innerHTML='');currentPhotos=[];renderPhotos();document.getElementById('formHeading').textContent='إنشاء تقرير جديد'}
+function readFile(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve({name:file.name,data:r.result});r.onerror=reject;r.readAsDataURL(file)})}
+document.getElementById('evidence').addEventListener('change',async e=>{for(const f of [...e.target.files]){if(!f.type.startsWith('image/'))continue;try{currentPhotos.push(await readFile(f))}catch(err){alert('تعذر قراءة إحدى الصور')}}renderPhotos();e.target.value=''});
+function renderPhotos(){const grid=document.getElementById('photoGrid');grid.innerHTML='';currentPhotos.forEach((p,i)=>{const d=document.createElement('div');d.className='photo';const img=document.createElement('img');img.src=p.data;img.alt=p.name;const b=document.createElement('button');b.type='button';b.textContent='×';b.title='حذف الصورة';b.onclick=()=>{currentPhotos.splice(i,1);renderPhotos()};d.append(img,b);grid.append(d)})}
+function collect(){return {id:document.getElementById('reportId').value||String(Date.now()),title:val('title'),date:val('date'),place:val('place'),target:val('target'),count:val('count'),summary:val('summary'),goals:lines('goals'),results:lines('results'),recommendations:lines('recommendations'),photos:currentPhotos,updatedAt:new Date().toISOString()}}
+function val(id){return document.getElementById(id).value.trim()}
+document.getElementById('reportForm').addEventListener('submit',e=>{e.preventDefault();const r=collect();if(!r.title){alert('يرجى كتابة عنوان التقرير');return}const i=reports.findIndex(x=>x.id===r.id);if(i>=0)reports[i]=r;else reports.unshift(r);if(persist()){alert('تم حفظ التقرير على هذا الجهاز');clearForm();showTab('saved')}});
+function editReport(id){const r=reports.find(x=>x.id===id);if(!r)return;showTab('new');document.getElementById('reportId').value=r.id;['title','date','place','target','count','summary'].forEach(k=>document.getElementById(k).value=r[k]||'');setLines('goals',r.goals);setLines('results',r.results);setLines('recommendations',r.recommendations);currentPhotos=r.photos||[];renderPhotos();document.getElementById('formHeading').textContent='تعديل التقرير'}
+function deleteReport(id){if(!confirm('هل تريدين حذف هذا التقرير نهائياً من هذا الجهاز؟'))return;reports=reports.filter(x=>x.id!==id);persist();renderList()}
+function renderList(){const box=document.getElementById('reportList');box.innerHTML='';if(!reports.length){box.innerHTML='<div class="empty">لا توجد تقارير محفوظة حتى الآن.</div>';return}reports.forEach(r=>{const d=document.createElement('div');d.className='report-item';const info=document.createElement('div');const strong=document.createElement('strong');strong.textContent=r.title||'تقرير بدون عنوان';const small=document.createElement('small');small.textContent=(r.date||'دون تاريخ')+' · '+(r.target||'')+' · '+(r.count||'0')+' مستفيدة';info.append(strong,small);const acts=document.createElement('div');acts.className='actions';[['فتح / تعديل',()=>editReport(r.id),'secondary'],['معاينة',()=>previewReport(r),'gold'],['حذف',()=>deleteReport(r.id),'danger']].forEach(([t,fn,c])=>{const b=document.createElement('button');b.textContent=t;b.className=c;b.onclick=fn;acts.append(b)});d.append(info,acts);box.append(d)})}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function arrHtml(a){return a&&a.length?'<ol>'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol>':'<p>—</p>'}
+function previewReport(r){document.getElementById('newPanel').classList.add('hidden');document.getElementById('savedPanel').classList.add('hidden');document.getElementById('backupPanel').classList.add('hidden');document.getElementById('previewPanel').classList.remove('hidden');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.getElementById('previewContent').innerHTML=
+'<div class="center"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>إدارة التعليم بمنطقة القصيم</div><h2>المتوسطة السادسة للبنات ببريدة</h2><p><b>المديرة:</b> تهاني أبوقريحة</p></div><h1>تقرير: '+esc(r.title)+'</h1>'+
+'<p><b>المنفذة:</b> حصة صالح المرشود</p><p><b>تاريخ التنفيذ:</b> '+esc(r.date||'—')+'　 <b>مكان التنفيذ:</b> '+esc(r.place||'—')+'</p><p><b>الفئة المستهدفة:</b> '+esc(r.target||'—')+'　 <b>عدد المستفيدات:</b> '+esc(r.count||'—')+'</p>'+
+'<h3>نبذة عن التنفيذ</h3><p>'+esc(r.summary||'—').replace(/\n/g,'<br>')+'</p><h3>الأهداف</h3>'+arrHtml(r.goals)+'<h3>النتائج والمخرجات</h3>'+arrHtml(r.results)+'<h3>التوصيات</h3>'+arrHtml(r.recommendations)+'<h3>الشواهد</h3>'+((r.photos||[]).map(p=>'<img src="'+p.data+'" alt="'+esc(p.name)+'">').join('')||'<p>لا توجد شواهد مرفقة.</p>');}
+function previewCurrent(){const r=collect();if(!r.title){alert('اكتبي عنوان التقرير أولاً');return}previewReport(r)}
+function backupAll(){const blob=new Blob([JSON.stringify({app:'منشئ التقارير - المتوسطة السادسة للبنات ببريدة',version:1,reports},null,2)],{type:'application/json'});downloadBlob(blob,'نسخة-احتياطية-التقارير.json')}
+function downloadBlob(blob,name){const a=document.createElement('a');const u=URL.createObjectURL(blob);a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
+document.getElementById('restoreFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const obj=JSON.parse(await f.text());if(!obj||!Array.isArray(obj.reports))throw Error();if(!confirm('سيتم دمج التقارير الموجودة في النسخة الاحتياطية مع التقارير الحالية. متابعة؟'))return;for(const r of obj.reports){const i=reports.findIndex(x=>x.id===r.id);if(i>=0)reports[i]=r;else reports.push(r)}if(persist())alert('تمت استعادة التقارير بنجاح')}catch(err){alert('الملف غير صالح أو ليس نسخة احتياطية من هذا النظام')}e.target.value=''});
+renderList();
+</script>
+</body></html>

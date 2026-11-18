@@ -39,8 +39,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
  <div>إدارة التعليم بمنطقة القصيم</div>
  <h1>منشئ التقارير</h1>
  <div class="school">المتوسطة السادسة للبنات ببريدة</div>
- <div class="owner">المديرة: تهاني أبوقريحة</div><br>
- <div class="owner">إعداد وتنفيذ: حصة صالح المرشود</div>
+ <div class="owner">مديرة المدرسة: تهاني أبوقريحة</div><br>
+ <div class="owner">إعداد وتنفيذ: حصه صالح المرشود</div>
 </header>
 <main class="wrap">
  <div class="tabs no-print">
@@ -55,6 +55,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
    <input type="hidden" id="reportId">
    <div class="grid">
     <div class="field full"><label for="title">عنوان التقرير *</label><input id="title" required placeholder="اكتبي عنوان التقرير"></div>
+    <div class="field full"><label for="executor">اسم المنفذة</label><input id="executor" placeholder="اكتبي اسم منفذة البرنامج أو النشاط"></div>
     <div class="field"><label for="date">تاريخ التنفيذ</label><input id="date" type="date"></div>
     <div class="field"><label for="place">مكان التنفيذ</label><input id="place" placeholder="مكان تنفيذ البرنامج أو النشاط"></div>
     <div class="field"><label for="target">الفئة المستهدفة</label><input id="target" placeholder="مثلاً: الطالبات / المعلمات"></div>
@@ -104,7 +105,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
 </main>
 <footer>منشئ التقارير · المتوسطة السادسة للبنات ببريدة</footer>
 <script>
-const KEY='sixthGirlsReports_v1';
+const KEY='sixthGirlsReports_v1', EXEC_KEY='sixthGirlsLastExecutor', OLD_EXEC='حصه صالح المرشود';
 let reports=loadReports(), currentPhotos=[];
 function loadReports(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return []}}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(reports));return true}catch(e){alert('تعذر الحفظ في مساحة المتصفح. نزّلي نسخة احتياطية أو قللي حجم الصور.');return false}}
@@ -116,26 +117,28 @@ function showTab(tab){
 function addLine(id,placeholder,value=''){const wrap=document.createElement('div');wrap.className='listrow';const input=document.createElement('input');input.placeholder=placeholder;input.value=value;input.setAttribute('aria-label',placeholder);const del=document.createElement('button');del.type='button';del.className='danger';del.textContent='حذف';del.onclick=()=>wrap.remove();wrap.append(input,del);document.getElementById(id).append(wrap)}
 function lines(id){return [...document.querySelectorAll('#'+id+' .listrow input')].map(x=>x.value.trim()).filter(Boolean)}
 function setLines(id,items){document.getElementById(id).innerHTML='';(items||[]).forEach(x=>addLine(id,'اكتبي هنا',x))}
-function clearForm(){document.getElementById('reportForm').reset();document.getElementById('reportId').value='';['goals','results','recommendations'].forEach(x=>document.getElementById(x).innerHTML='');currentPhotos=[];renderPhotos();document.getElementById('formHeading').textContent='إنشاء تقرير جديد'}
+function clearForm(){document.getElementById('reportForm').reset();document.getElementById('reportId').value='';['goals','results','recommendations'].forEach(x=>document.getElementById(x).innerHTML='');currentPhotos=[];renderPhotos();document.getElementById('executor').value=lastExecutor();document.getElementById('formHeading').textContent='إنشاء تقرير جديد'}
+function lastExecutor(){try{return localStorage.getItem(EXEC_KEY)||''}catch(e){return ''}}
 function readFile(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve({name:file.name,data:r.result});r.onerror=reject;r.readAsDataURL(file)})}
 document.getElementById('evidence').addEventListener('change',async e=>{for(const f of [...e.target.files]){if(!f.type.startsWith('image/'))continue;try{currentPhotos.push(await readFile(f))}catch(err){alert('تعذر قراءة إحدى الصور')}}renderPhotos();e.target.value=''});
 function renderPhotos(){const grid=document.getElementById('photoGrid');grid.innerHTML='';currentPhotos.forEach((p,i)=>{const d=document.createElement('div');d.className='photo';const img=document.createElement('img');img.src=p.data;img.alt=p.name;const b=document.createElement('button');b.type='button';b.textContent='×';b.title='حذف الصورة';b.onclick=()=>{currentPhotos.splice(i,1);renderPhotos()};d.append(img,b);grid.append(d)})}
-function collect(){return {id:document.getElementById('reportId').value||String(Date.now()),title:val('title'),date:val('date'),place:val('place'),target:val('target'),count:val('count'),summary:val('summary'),goals:lines('goals'),results:lines('results'),recommendations:lines('recommendations'),photos:currentPhotos,updatedAt:new Date().toISOString()}}
+function collect(){return {id:document.getElementById('reportId').value||String(Date.now()),title:val('title'),executor:val('executor'),date:val('date'),place:val('place'),target:val('target'),count:val('count'),summary:val('summary'),goals:lines('goals'),results:lines('results'),recommendations:lines('recommendations'),photos:currentPhotos,updatedAt:new Date().toISOString()}}
 function val(id){return document.getElementById(id).value.trim()}
-document.getElementById('reportForm').addEventListener('submit',e=>{e.preventDefault();const r=collect();if(!r.title){alert('يرجى كتابة عنوان التقرير');return}const i=reports.findIndex(x=>x.id===r.id);if(i>=0)reports[i]=r;else reports.unshift(r);if(persist()){alert('تم حفظ التقرير على هذا الجهاز');clearForm();showTab('saved')}});
-function editReport(id){const r=reports.find(x=>x.id===id);if(!r)return;showTab('new');document.getElementById('reportId').value=r.id;['title','date','place','target','count','summary'].forEach(k=>document.getElementById(k).value=r[k]||'');setLines('goals',r.goals);setLines('results',r.results);setLines('recommendations',r.recommendations);currentPhotos=r.photos||[];renderPhotos();document.getElementById('formHeading').textContent='تعديل التقرير'}
+document.getElementById('reportForm').addEventListener('submit',e=>{e.preventDefault();const r=collect();if(!r.title){alert('يرجى كتابة عنوان التقرير');return}const i=reports.findIndex(x=>x.id===r.id);if(i>=0)reports[i]=r;else reports.unshift(r);if(persist()){try{localStorage.setItem(EXEC_KEY,r.executor)}catch(e){}alert('تم حفظ التقرير على هذا الجهاز');clearForm();showTab('saved')}});
+function editReport(id){const r=reports.find(x=>x.id===id);if(!r)return;showTab('new');document.getElementById('reportId').value=r.id;['title','date','place','target','count','summary'].forEach(k=>document.getElementById(k).value=r[k]||'');document.getElementById('executor').value=r.executor??OLD_EXEC;setLines('goals',r.goals);setLines('results',r.results);setLines('recommendations',r.recommendations);currentPhotos=r.photos||[];renderPhotos();document.getElementById('formHeading').textContent='تعديل التقرير'}
 function deleteReport(id){if(!confirm('هل تريدين حذف هذا التقرير نهائياً من هذا الجهاز؟'))return;reports=reports.filter(x=>x.id!==id);persist();renderList()}
 function renderList(){const box=document.getElementById('reportList');box.innerHTML='';if(!reports.length){box.innerHTML='<div class="empty">لا توجد تقارير محفوظة حتى الآن.</div>';return}reports.forEach(r=>{const d=document.createElement('div');d.className='report-item';const info=document.createElement('div');const strong=document.createElement('strong');strong.textContent=r.title||'تقرير بدون عنوان';const small=document.createElement('small');small.textContent=(r.date||'دون تاريخ')+' · '+(r.target||'')+' · '+(r.count||'0')+' مستفيدة';info.append(strong,small);const acts=document.createElement('div');acts.className='actions';[['فتح / تعديل',()=>editReport(r.id),'secondary'],['معاينة',()=>previewReport(r),'gold'],['حذف',()=>deleteReport(r.id),'danger']].forEach(([t,fn,c])=>{const b=document.createElement('button');b.textContent=t;b.className=c;b.onclick=fn;acts.append(b)});d.append(info,acts);box.append(d)})}
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function arrHtml(a){return a&&a.length?'<ol>'+a.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ol>':'<p>—</p>'}
 function previewReport(r){document.getElementById('newPanel').classList.add('hidden');document.getElementById('savedPanel').classList.add('hidden');document.getElementById('backupPanel').classList.add('hidden');document.getElementById('previewPanel').classList.remove('hidden');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.getElementById('previewContent').innerHTML=
-'<div class="center"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>إدارة التعليم بمنطقة القصيم</div><h2>المتوسطة السادسة للبنات ببريدة</h2><p><b>المديرة:</b> تهاني أبوقريحة</p></div><h1>تقرير: '+esc(r.title)+'</h1>'+
-'<p><b>المنفذة:</b> حصة صالح المرشود</p><p><b>تاريخ التنفيذ:</b> '+esc(r.date||'—')+'　 <b>مكان التنفيذ:</b> '+esc(r.place||'—')+'</p><p><b>الفئة المستهدفة:</b> '+esc(r.target||'—')+'　 <b>عدد المستفيدات:</b> '+esc(r.count||'—')+'</p>'+
+'<div class="center"><div>المملكة العربية السعودية</div><div>وزارة التعليم</div><div>إدارة التعليم بمنطقة القصيم</div><h2>المتوسطة السادسة للبنات ببريدة</h2><p><b>مديرة المدرسة:</b> تهاني أبوقريحة</p></div><h1>تقرير: '+esc(r.title)+'</h1>'+
+'<p><b>المنفذة:</b> '+esc((r.executor??OLD_EXEC)||'—')+'</p><p><b>تاريخ التنفيذ:</b> '+esc(r.date||'—')+'　 <b>مكان التنفيذ:</b> '+esc(r.place||'—')+'</p><p><b>الفئة المستهدفة:</b> '+esc(r.target||'—')+'　 <b>عدد المستفيدات:</b> '+esc(r.count||'—')+'</p>'+
 '<h3>نبذة عن التنفيذ</h3><p>'+esc(r.summary||'—').replace(/\n/g,'<br>')+'</p><h3>الأهداف</h3>'+arrHtml(r.goals)+'<h3>النتائج والمخرجات</h3>'+arrHtml(r.results)+'<h3>التوصيات</h3>'+arrHtml(r.recommendations)+'<h3>الشواهد</h3>'+((r.photos||[]).map(p=>'<img src="'+p.data+'" alt="'+esc(p.name)+'">').join('')||'<p>لا توجد شواهد مرفقة.</p>');}
 function previewCurrent(){const r=collect();if(!r.title){alert('اكتبي عنوان التقرير أولاً');return}previewReport(r)}
 function backupAll(){const blob=new Blob([JSON.stringify({app:'منشئ التقارير - المتوسطة السادسة للبنات ببريدة',version:1,reports},null,2)],{type:'application/json'});downloadBlob(blob,'نسخة-احتياطية-التقارير.json')}
 function downloadBlob(blob,name){const a=document.createElement('a');const u=URL.createObjectURL(blob);a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
 document.getElementById('restoreFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const obj=JSON.parse(await f.text());if(!obj||!Array.isArray(obj.reports))throw Error();if(!confirm('سيتم دمج التقارير الموجودة في النسخة الاحتياطية مع التقارير الحالية. متابعة؟'))return;for(const r of obj.reports){const i=reports.findIndex(x=>x.id===r.id);if(i>=0)reports[i]=r;else reports.push(r)}if(persist())alert('تمت استعادة التقارير بنجاح')}catch(err){alert('الملف غير صالح أو ليس نسخة احتياطية من هذا النظام')}e.target.value=''});
+document.getElementById('executor').value=lastExecutor();
 renderList();
 </script>
 </body></html>
